@@ -1,0 +1,20 @@
+[
+   {
+      "ID":"1",
+      "DESCRIPTION":"Google IMAP Server",
+      "HOSTNAME":"imap.gmail.com",
+      "SUPPORTED_PROTOCOLS":"IMAP"
+   },
+   {
+      "ID":"2",
+      "DESCRIPTION":"Google POP Server",
+      "HOSTNAME":"pop.gmail.com",
+      "SUPPORTED_PROTOCOLS":"POP"
+   },
+   {
+      "ID":"2",
+      "DESCRIPTION":"Google SMTP Server",
+      "HOSTNAME":"smtp.gmail.com",
+      "SUPPORTED_PROTOCOLS":"SMTP"
+   }
+]
