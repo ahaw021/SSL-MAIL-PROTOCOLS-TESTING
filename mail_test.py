@@ -30,13 +30,13 @@ IMAP_LOGIN = b'LOGIN '
 
 STARTTLS_COMMAND = b'STARTTLS \r\n'
 
-EMAIL_USERNAME = b''
-EMAIL_PASSWORD = b''
+EMAIL_USERNAME = b'changeme@gmail.com'
+EMAIL_PASSWORD = b'changeme'
 
 
 
 def insecure_connection(HOST,PORT,PROTOCOL):
-    print('Connecting to host: {}  on Port Number {} using Plaintext'.format(HOST,PORT))
+    print('Connecting to host: {}  on Port Number {} using Plaintext \r\n'.format(HOST,PORT))
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client:
         client.connect((HOST, PORT))
         data = client.recv(1024)
@@ -54,7 +54,7 @@ def insecure_connection(HOST,PORT,PROTOCOL):
 # THE code above is Python2 ssl so the code below uses SSL contexts compatible with Python3 Sockets and SSL
 
 def starttls_connection(HOST,PORT,PROTOCOL):
-    print('Connecting to host: {}  on Port Number {} using STARTTLS'.format(HOST,PORT))
+    print('Connecting to host: {}  on Port Number {} using STARTTLS \r\n'.format(HOST,PORT))
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client:
 
         client.connect((HOST, PORT))
@@ -76,7 +76,7 @@ def starttls_connection(HOST,PORT,PROTOCOL):
         print('Received', repr(data),'\r\n')
 
         cert = secure_client.getpeercert()
-        print("Certificate is Issued By: {} \r\n".format(cert["issuer"]))
+        print("Certificate is Issued By: {} \r\n".format(cert["issuer"][2]))
         print("Certificate covers the following Domains: {}\r\n".format(cert["subjectAltName"]))
 
         #pass the secure client to the write protocol conversation handler
@@ -84,6 +84,7 @@ def starttls_connection(HOST,PORT,PROTOCOL):
         decide_protocol_handler(secure_client,PROTOCOL)
 
 # Standard SSL Python 3 Code (straight from documents)
+
 
 def secure_connection(HOST,PORT,PROTOCOL):
 
@@ -100,6 +101,8 @@ def secure_connection(HOST,PORT,PROTOCOL):
     print("Certificate covers the following Domains: {}\r\n".format(cert["subjectAltName"]))
 
     decide_protocol_handler(secure_client,PROTOCOL)
+
+# Function for choosing conversation path based on Protocol
 
 def decide_protocol_handler(client, PROTOCOL):
     if PROTOCOL=="SMTP":
@@ -120,16 +123,42 @@ def decide_protocol_handler(client, PROTOCOL):
 # IMAP COMMAND REFERENCE: http://busylog.net/telnet-imap-commands-note/
 
 
-def pop_conversation(socket):
+def pop_conversation(client):
     print("Let's Start a POP Conversation: \r\n")
 
-def smtp_conversation(socket):
+def smtp_conversation(client):
     print("Let's Start an SMTP Conversation: \r\n")
 
-def imap_conversation(socket):
+    client.send(SMTP_AUTH)
+    data = client.recv(1024)
+    #print(data)
+
+    b64_encoded = base64.b64encode(EMAIL_USERNAME)
+    print("Username Encoded as base64: {}".format(b64_encoded))
+    client.send(b64_encoded + b'\r\n')
+    data = client.recv(1024)
+    #print(data)
+
+    b64_encoded = base64.b64encode(EMAIL_PASSWORD)
+    print("Password Encoded as base64: {}\r\n".format(b64_encoded))
+    client.send(b64_encoded + b'\r\n')
+    data = client.recv(1024)
+    print("Server Response: {}".format(data))
+
+def imap_conversation(client):
     print("Let's Start an IMAP Conversation: \r\n")
+
+    data = client.recv(1024)
+    print("Authentication String: {}".format(IMAP_RAND_STRING + IMAP_LOGIN + EMAIL_USERNAME +b' ' + EMAIL_PASSWORD + b'\r\n'))
+    client.send(IMAP_RAND_STRING + IMAP_LOGIN + EMAIL_USERNAME +b' ' + EMAIL_PASSWORD + b'\r\n')
+    data = client.recv(1024)
+    print(data)
 
 #EXAMPLES:
 
-# secure_connection("smtp.gmail.com",SMTP_IMPLICIT_SSL,"SMTP")
-# starttls_connection("smtp.gmail.com",SMTP_STARTTLS_SSL,"SMTP")
+#secure_connection("smtp.gmail.com",SMTP_IMPLICIT_SSL,"SMTP")
+#starttls_connection("smtp.gmail.com",SMTP_STARTTLS_SSL,"SMTP")
+#starttls_connection("smtp.gmail.com",SMTP_STANDARD,"SMTP")
+
+secure_connection("imap.gmail.com",IMAP_IMPLICIT_SSL,"IMAP")
+#secure_connection
