@@ -13,8 +13,6 @@ with open('mail_servers.json') as data_file:
 
 POP_STANDARD = 110
 POP_IMPLICIT_SSL = 995
-POP_USER = b'USER \r\n'
-POP_PASS = b'PASS \r\n'
 POP_USER = b'USER '
 POP_PASS = b'PASS '
 
