@@ -61,17 +61,25 @@ def starttls_connection(HOST,PORT,PROTOCOL):
         data = client.recv(1024)
         #print('Received', repr(data))
 
-        # SMTP NEEDS A EHLO MESSAGE BEFORE STARTTLS COMMAND
-        # IMAP AND POP DO NOT
+        # SMTP NEEDS A EHLO MESSAGE BEFORE STARTTLS AND OTHER COMMANDS
+        # IMAP NEEDS A RANDOM STRING FOR THE STARTTLS COMMAND
+        # POP3 - investigate
+
 
         if PROTOCOL=="SMTP":
             client.send(SMTP_EHLO)
             data = client.recv(1024)
             #print('Received', repr(data))
+            client.send(STARTTLS_COMMAND)
+            data = client.recv(1024)
+            #print('Received', repr(data))
 
-        client.send(STARTTLS_COMMAND)
-        data = client.recv(1024)
-        #print('Received', repr(data))
+        if PROTOCOL=="IMAP":
+            client.send(IMAP_RAND_STRING + STARTTLS_COMMAND)
+            data = client.recv(1024)
+            #print('Received', repr(data))
+
+
 
         context = ssl.create_default_context()
         secure_client = context.wrap_socket(client,server_hostname=HOST)
@@ -96,6 +104,15 @@ def secure_connection(HOST,PORT,PROTOCOL):
     secure_client = context.wrap_socket(socket.socket(socket.AF_INET),server_hostname=HOST)
     secure_client.connect((HOST,PORT))
     data = secure_client.recv(1024)
+
+    # SMTP NEEDS A EHLO MESSAGE BEFORE OTHER COMMANDS
+    # IMAP AND POP DO NOT
+
+    if PROTOCOL=="SMTP":
+        secure_client.send(SMTP_EHLO)
+        data = secure_client.recv(1024)
+        #print('SMTP EHLO RESPONSE: ', repr(data))
+
 
     cert = secure_client.getpeercert()
     print("Certificate is Issued By: {} \r\n".format(cert["issuer"][2]))
