@@ -10,3 +10,12 @@ starttls_connection("smtp.gmail.com",SMTP_STARTTLS_SSL,"SMTP")
 
 The aim is to assist with testing with STARTTLS troubleshooting
 
+#Update the Credential to Valid Credentials 
+
+EMAIL_USERNAME = b'changeme@gmail.com'
+EMAIL_PASSWORD = b'changeme'
+
+If credentials are not updated and SSL works you will get error messages. 
+
+It's useful for troubleshooting as it show TLS/SSL transport is working. You won't be able to troubleshoot higher level protocol errors. 
+
