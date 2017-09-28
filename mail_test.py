@@ -15,6 +15,8 @@ POP_STANDARD = 110
 POP_IMPLICIT_SSL = 995
 POP_USER = b'USER \r\n'
 POP_PASS = b'PASS \r\n'
+POP_USER = b'USER '
+POP_PASS = b'PASS '
 
 SMTP_STANDARD = 25
 SMTP_IMPLICIT_SSL = 465
@@ -24,7 +26,7 @@ SMTP_AUTH = b'AUTH LOGIN \r\n'
 
 IMAP_STANDARD = 143
 IMAP_IMPLICIT_SSL = 993
-IMAP_RAND_STRING = b'A1'
+IMAP_RAND_STRING = b'A1 '
 IMAP_CAPABILITY = b'CAPABILITY \r\n'
 IMAP_LOGIN = b'LOGIN '
 
@@ -61,9 +63,13 @@ def starttls_connection(HOST,PORT,PROTOCOL):
         data = client.recv(1024)
         #print('Received', repr(data))
 
-        client.send(SMTP_EHLO)
-        data = client.recv(1024)
-        #print('Received', repr(data))
+        # SMTP NEEDS A EHLO MESSAGE BEFORE STARTTLS COMMAND
+        # IMAP AND POP DO NOT
+
+        if PROTOCOL=="SMTP":
+            client.send(SMTP_EHLO)
+            data = client.recv(1024)
+            #print('Received', repr(data))
 
         client.send(STARTTLS_COMMAND)
         data = client.recv(1024)
@@ -91,10 +97,7 @@ def secure_connection(HOST,PORT,PROTOCOL):
     context = ssl.create_default_context()
     secure_client = context.wrap_socket(socket.socket(socket.AF_INET),server_hostname=HOST)
     secure_client.connect((HOST,PORT))
-
-    secure_client.send(SMTP_EHLO)
     data = secure_client.recv(1024)
-    print('Received', repr(data),'\r\n')
 
     cert = secure_client.getpeercert()
     print("Certificate is Issued By: {} \r\n".format(cert["issuer"][2]))
@@ -121,35 +124,48 @@ def decide_protocol_handler(client, PROTOCOL):
 # POP COMMAND REFERENCE: https://blog.yimingliu.com/2009/01/23/testing-a-pop3-server-via-telnet-or-openssl/
 # SMTP COMMAND REFERENCE: https://www.ndchost.com/wiki/mail/test-smtp-auth-telnet
 # IMAP COMMAND REFERENCE: http://busylog.net/telnet-imap-commands-note/
+# Currently working to Authentication only
 
 
 def pop_conversation(client):
     print("Let's Start a POP Conversation: \r\n")
 
-def smtp_conversation(client):
-    print("Let's Start an SMTP Conversation: \r\n")
+    time.sleep(1)
+    print("Username formatted for POP: {}".format(POP_USER + EMAIL_USERNAME + b' \r\n'))
+    client.send(POP_USER + EMAIL_USERNAME + b' \r\n')
+    data = client.recv(1024)
+    print(data)
 
+    print("Password formatted for POP: {}".format(POP_PASS + EMAIL_PASSWORD + b' \r\n'))
+    client.send(POP_PASS + EMAIL_PASSWORD + b' \r\n')
+    data = client.recv(1024)
+    print(data)
+
+
+def smtp_conversation(client):
+
+    print("Let's Start an SMTP Conversation: \r\n")
     client.send(SMTP_AUTH)
     data = client.recv(1024)
-    #print(data)
 
     b64_encoded = base64.b64encode(EMAIL_USERNAME)
     print("Username Encoded as base64: {}".format(b64_encoded))
-    client.send(b64_encoded + b'\r\n')
+    client.send(b64_encoded)
+    client.send(b'\r\n')
     data = client.recv(1024)
-    #print(data)
+    #print("Server After Username: {}".format(data))
 
     b64_encoded = base64.b64encode(EMAIL_PASSWORD)
     print("Password Encoded as base64: {}\r\n".format(b64_encoded))
-    client.send(b64_encoded + b'\r\n')
+    client.send(b64_encoded)
+    client.send(b'\r\n')
     data = client.recv(1024)
     print("Server Response: {}".format(data))
 
 def imap_conversation(client):
     print("Let's Start an IMAP Conversation: \r\n")
 
-    data = client.recv(1024)
-    print("Authentication String: {}".format(IMAP_RAND_STRING + IMAP_LOGIN + EMAIL_USERNAME +b' ' + EMAIL_PASSWORD + b'\r\n'))
+    print("Authentication String: {}".format(IMAP_RAND_STRING + IMAP_LOGIN + EMAIL_USERNAME +b' ' + EMAIL_PASSWORD + b' \r\n'))
     client.send(IMAP_RAND_STRING + IMAP_LOGIN + EMAIL_USERNAME +b' ' + EMAIL_PASSWORD + b'\r\n')
     data = client.recv(1024)
     print(data)
@@ -160,5 +176,5 @@ def imap_conversation(client):
 #starttls_connection("smtp.gmail.com",SMTP_STARTTLS_SSL,"SMTP")
 #starttls_connection("smtp.gmail.com",SMTP_STANDARD,"SMTP")
 
-secure_connection("imap.gmail.com",IMAP_IMPLICIT_SSL,"IMAP")
-#secure_connection
+#secure_connection("imap.gmail.com",IMAP_IMPLICIT_SSL,"IMAP")
+#secure_connection("pop.gmail.com",POP_IMPLICIT_SSL,"POP")
