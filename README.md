@@ -34,6 +34,7 @@ B) Test Ports Automatically Given A HOST
 C) Add Argparse for commandline
 D) -Script Output -- allows for openssl commands to be dumpted to screen so users can test with openssl
 E) - Custom Ports -- allow for custom Ports for testing emails
+F) Better Error Handling for selecting the wrong Strategy
 
 # Known Issues 
 
