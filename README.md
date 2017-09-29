@@ -27,6 +27,22 @@ It's useful for troubleshooting as it show TLS/SSL transport is working. You won
 EMAIL_PASSWORD = b'changeme'
 
 
+# To Do
 
+A) Test TLS1.2, TLS1.1 and TLS1.0 handshakes automatically for a given server
+B) Test Ports Automatically Given A protocol
+C) Add Argparse for commandline
+
+# Known Issues 
+
+A) Some servers do not return responses as one TCP packet which causes issues when reading results (I should clear the result stream before moving to the next step). This can lead to false positives. Example: mail.zoho.com
+
+# Further Development and No "Issues"
+
+I wrote this script specifically for Let's Encrypt testing as I contribute to the forums. 
+
+If you have ideas or suggestions please post them on the Let's Encrypt forum https://community.letsencrypt.org
+
+I suggest adding my tag @ahaw021 so I am made aware of any posts
 
 
