@@ -35,7 +35,7 @@ C) Add Argparse for commandline
 
 # Known Issues 
 
-A) Some servers do not return responses as one TCP packet which causes issues when reading results (I should clear the result stream before moving to the next step). This can lead to false positives. Example: mail.zoho.com
+A) Some servers do not return responses as one TCP packet which causes issues when reading results (I should clear the result stream before moving to the next step). This can lead to false Results. Example: mail.zoho.com
 
 # Further Development and No "Issues"
 
