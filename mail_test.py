@@ -53,7 +53,7 @@ def insecure_connection(HOST,PORT,PROTOCOL):
 # STARTTLS PYTHON WITH SOCKETS CODE: https://stackoverflow.com/questions/12593944/how-to-start-tls-on-an-active-connection-in-python
 # THE code above is Python2 ssl so the code below uses SSL contexts compatible with Python3 Sockets and SSL
 
-def starttls_connection(HOST,PORT,PROTOCOL):
+def starttls_connection(HOST,PORT,PROTOCOL,TLSSTRENGTH):
     print('Connecting to host: {}  on Port Number {} using STARTTLS \r\n'.format(HOST,PORT))
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client:
 
@@ -88,8 +88,13 @@ def starttls_connection(HOST,PORT,PROTOCOL):
         print('Received', repr(data),'\r\n')
 
         cert = secure_client.getpeercert()
-        print("Certificate is Issued By: {} \r\n".format(cert["issuer"][2]))
+        print("Certificate is Issued By: {} \r\n".format(cert["issuer"]))
         print("Certificate covers the following Domains: {}\r\n".format(cert["subjectAltName"]))
+
+
+        print("Cipher in use for this TLS Connection: {} \r\n".format(secure_client.cipher()))
+        #print("Ciphers offered to the Mail Server During Negotiations: {}\r\n".format(secure_client.shared_ciphers()))
+
 
         #pass the secure client to the write protocol conversation handler
 
@@ -98,7 +103,7 @@ def starttls_connection(HOST,PORT,PROTOCOL):
 # Standard SSL Python 3 Code (straight from documents)
 
 
-def secure_connection(HOST,PORT,PROTOCOL):
+def secure_connection(HOST,PORT,PROTOCOL,TLSSTRENGTH):
 
     context = ssl.create_default_context()
     secure_client = context.wrap_socket(socket.socket(socket.AF_INET),server_hostname=HOST)
@@ -115,7 +120,7 @@ def secure_connection(HOST,PORT,PROTOCOL):
 
 
     cert = secure_client.getpeercert()
-    print("Certificate is Issued By: {} \r\n".format(cert["issuer"][2]))
+    print("Certificate is Issued By: {} \r\n".format(cert["issuer"]))
     print("Certificate covers the following Domains: {}\r\n".format(cert["subjectAltName"]))
 
     decide_protocol_handler(secure_client,PROTOCOL)
@@ -185,11 +190,21 @@ def imap_conversation(client):
     data = client.recv(1024)
     print(data)
 
+
+
 #EXAMPLES:
 
-#secure_connection("smtp.gmail.com",SMTP_IMPLICIT_SSL,"SMTP")
-#starttls_connection("smtp.gmail.com",SMTP_STARTTLS_SSL,"SMTP")
-#starttls_connection("smtp.gmail.com",SMTP_STANDARD,"SMTP")
+#starttls_connection("smtp.gmail.com",SMTP_STARTTLS_SSL,"SMTP","TLS1")
+#starttls_connection("smtp.gmail.com",SMTP_IMPLICIT_SSL,"SMTP","TLS1")
 
-#secure_connection("imap.gmail.com",IMAP_IMPLICIT_SSL,"IMAP")
-#secure_connection("pop.gmail.com",POP_IMPLICIT_SSL,"POP")
+#starttls_connection("smtp.mail.yahoo.com",SMTP_STARTTLS_SSL,"SMTP","TLS1")
+#starttls_connection("smtp.mail.yahoo.com",SMTP_STANDARD,"SMTP","TLS1")
+#secure_connection("smtp.gmail.com",SMTP_IMPLICIT_SSL,"SMTP","TLS1")
+
+#starttls_connection("mx3.hotmail.com",SMTP_STANDARD,"SMTP","TLS1")
+
+#secure_connection("imap.gmail.com",IMAP_IMPLICIT_SSL,"IMAP","TLS1")
+#secure_connection("pop.gmail.com",POP_IMPLICIT_SSL,"POP","TLS1")
+
+#secure_connection("imap.mail.yahoo.com",IMAP_IMPLICIT_SSL,"IMAP","TLS1")
+#secure_connection("pop.mail.yahoo.com",POP_IMPLICIT_SSL,"POP","TLS1")
