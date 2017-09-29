@@ -3,6 +3,7 @@ import ssl
 import base64
 import json
 import time
+import os
 
 #don't forget \r\n on commands otherwise they won't get submitted to the server (sent but no response will come back)
 # these should probably be broken out in to a separate dictionary file but here for now
@@ -63,7 +64,7 @@ def starttls_connection(HOST,PORT,PROTOCOL,TLSSTRENGTH):
 
         # SMTP NEEDS A EHLO MESSAGE BEFORE STARTTLS AND OTHER COMMANDS
         # IMAP NEEDS A RANDOM STRING FOR THE STARTTLS COMMAND
-        # POP3 - investigate
+        # POP3 - investigate but for now assume it's just a straight forward stattls
 
 
         if PROTOCOL=="SMTP":
@@ -72,20 +73,28 @@ def starttls_connection(HOST,PORT,PROTOCOL,TLSSTRENGTH):
             #print('Received', repr(data))
             client.send(STARTTLS_COMMAND)
             data = client.recv(1024)
-            #print('Received', repr(data))
+            print('Response from STARTTLS_COMMAND:', repr(data))
 
         if PROTOCOL=="IMAP":
             client.send(IMAP_RAND_STRING + STARTTLS_COMMAND)
             data = client.recv(1024)
-            #print('Received', repr(data))
+            #print('Response from STARTTLS_COMMAND', repr(data))
 
+        if PROTOCOL=="POP":
+            client.send(STARTTLS_COMMAND)
+            data = client.recv(1024)
+            #print('Response from STARTTLS_COMMAND', repr(data))
 
 
         context = ssl.create_default_context()
         secure_client = context.wrap_socket(client,server_hostname=HOST)
-        secure_client.send(SMTP_EHLO)
-        data = secure_client.recv(1024)
-        print('Received', repr(data),'\r\n')
+
+        # SMTP NEEDS A EHLO MESSAGE BEFORE STARTTLS AND OTHER COMMANDS
+
+        if PROTOCOL=="SMTP":
+            secure_client.send(SMTP_EHLO)
+            data = secure_client.recv(1024)
+            #print('Results of SMTP EHLO', repr(data),'\r\n')
 
         cert = secure_client.getpeercert()
         print("Certificate is Issued By: {} \r\n".format(cert["issuer"]))
@@ -100,11 +109,12 @@ def starttls_connection(HOST,PORT,PROTOCOL,TLSSTRENGTH):
 
         decide_protocol_handler(secure_client,PROTOCOL)
 
+
+
 # Standard SSL Python 3 Code (straight from documents)
 
-
 def secure_connection(HOST,PORT,PROTOCOL,TLSSTRENGTH):
-
+    print('Connecting to host: {}  on Port Number {} using an IMPLICITY SECURE Connection \r\n'.format(HOST,PORT))
     context = ssl.create_default_context()
     secure_client = context.wrap_socket(socket.socket(socket.AF_INET),server_hostname=HOST)
     secure_client.connect((HOST,PORT))
@@ -195,11 +205,11 @@ def imap_conversation(client):
 #EXAMPLES:
 
 #starttls_connection("smtp.gmail.com",SMTP_STARTTLS_SSL,"SMTP","TLS1")
-#starttls_connection("smtp.gmail.com",SMTP_IMPLICIT_SSL,"SMTP","TLS1")
+#starttls_connection("smtp.gmail.com",SMTP_STANDARD,"SMTP","TLS1")
 
 #starttls_connection("smtp.mail.yahoo.com",SMTP_STARTTLS_SSL,"SMTP","TLS1")
 #starttls_connection("smtp.mail.yahoo.com",SMTP_STANDARD,"SMTP","TLS1")
-#secure_connection("smtp.gmail.com",SMTP_IMPLICIT_SSL,"SMTP","TLS1")
+#secure_connection("smtp.yahoo.com",SMTP_IMPLICIT_SSL,"SMTP","TLS1")
 
 #starttls_connection("mx3.hotmail.com",SMTP_STANDARD,"SMTP","TLS1")
 
