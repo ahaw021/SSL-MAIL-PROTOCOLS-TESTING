@@ -1,11 +1,13 @@
 from conversations import *
+from constants import *
+
 import socket
 import ssl
 import base64
 import time
 
 def insecure_connection(HOST,PORT,PROTOCOL):
-    print('Connecting to host: {}  on Port Number {} using Plaintext \r\n'.format(HOST,PORT))
+    print("Connecting to host: {}  on Port Number {} using Plaintext \r\n".format(HOST,PORT))
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client:
         client.connect((HOST, PORT))
         data = client.recv(1024)
@@ -22,8 +24,10 @@ def insecure_connection(HOST,PORT,PROTOCOL):
 # STARTTLS PYTHON WITH SOCKETS CODE: https://stackoverflow.com/questions/12593944/how-to-start-tls-on-an-active-connection-in-python
 # THE code above is Python2 ssl so the code below uses SSL contexts compatible with Python3 Sockets and SSL
 
-def starttls_connection(HOST,PORT,PROTOCOL,TLSSTRENGTH):
-    print('Connecting to host: {}  on Port Number {} using STARTTLS \r\n'.format(HOST,PORT))
+def starttls_connection(HOST,PORT,PROTOCOL,TLSSTRENGTH="1.2"):
+    print("Connecting to host: {}  on Port Number {} using STARTTLS \r\n".format(HOST,PORT))
+    print("TLS Cipher Suite Selected: {} \r\n".format(TLSSTRENGTH))
+
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client:
 
         client.connect((HOST, PORT))
@@ -33,7 +37,6 @@ def starttls_connection(HOST,PORT,PROTOCOL,TLSSTRENGTH):
         # SMTP NEEDS A EHLO MESSAGE BEFORE STARTTLS AND OTHER COMMANDS
         # IMAP NEEDS A RANDOM STRING FOR THE STARTTLS COMMAND
         # POP3 - investigate but for now assume it's just a straight forward stattls
-
 
         if PROTOCOL=="SMTP":
             client.send(SMTP_EHLO)
@@ -70,8 +73,9 @@ def starttls_connection(HOST,PORT,PROTOCOL,TLSSTRENGTH):
 
 # Standard SSL Python 3 Code (straight from documents)
 
-def secure_connection(HOST,PORT,PROTOCOL,TLSSTRENGTH):
-    print('Connecting to host: {}  on Port Number {} using an IMPLICITY SECURE Connection \r\n'.format(HOST,PORT))
+def secure_connection(HOST,PORT,PROTOCOL,TLSSTRENGTH="1.2"):
+    print("Connecting to host: {}  on Port Number {} using an IMPLICITY SECURE Connection \r\n".format(HOST,PORT))
+    print("TLS Cipher Suite Selected: {} \r\n".format(TLSSTRENGTH))
     context = ssl.create_default_context()
     secure_client = context.wrap_socket(socket.socket(socket.AF_INET),server_hostname=HOST)
     secure_client.connect((HOST,PORT))

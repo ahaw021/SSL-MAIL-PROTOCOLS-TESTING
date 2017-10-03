@@ -1,3 +1,5 @@
+from constants import *
+
 # Function for choosing conversation path based on Protocol
 
 def decide_protocol_handler(client, PROTOCOL):
