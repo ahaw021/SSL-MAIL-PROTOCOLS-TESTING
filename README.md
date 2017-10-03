@@ -31,10 +31,10 @@ EMAIL_PASSWORD = b'changeme'
 
 # To Do
 
-~A) Test TLS1.2, TLS1.1 and TLS1.0 handshakes automatically for a given server~
-B) Test Ports Automatically Given A HOST
+A) Test TLS1.2, TLS1.1 and TLS1.0 handshakes automatically for a given server
+~B) Test Ports Automatically Given A HOST~
 C) Add Argparse for commandline
-D) -Script Output -- allows for openssl commands to be dumpted to screen so users can test with openssl
+~D) -Script Output -- allows for openssl commands to be dumpted to screen so users can test with openssl~
 E) - Custom Ports -- allow for custom Ports for testing emails
 F) Better Error Handling for selecting the wrong Strategy
 
