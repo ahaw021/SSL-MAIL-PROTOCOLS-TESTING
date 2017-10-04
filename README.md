@@ -8,16 +8,27 @@ Usage - the script doesn't take parameters but a couple of example are below
 
 ### EXAMPLES:
 
-### Connect to Google SMTP Server via SSL/TLS on 456 and also via STARTTLS on Port 25 and 587
+testing_common_providers is a file that contains test examples for common providers and standard protocols.
 
-> secure_connection("smtp.gmail.com",SMTP_IMPLICIT_SSL,"SMTP")
-starttls_connection("smtp.gmail.com",SMTP_STARTTLS_SSL,"SMTP")
-starttls_connection("smtp.gmail.com",SMTP_STANDARD,"SMTP")
+######Testing Google Mail Services:
 
-### Connect to Google POP and IMAP Server via SSL/TLS on 993 and 995. Google does not have a STARTTLS IMAP or POP Service.
+test_gmail_services()
 
-> secure_connection("imap.gmail.com",IMAP_IMPLICIT_SSL,"IMAP")
-secure_connection("pop.gmail.com",POP_IMPLICIT_SSL,"POP")
+This will run a series of connections on GMAIL services.
+
+Insecure SMTP on Port 25 (this should not allow for authentication as this requires STARTTLS to be run)
+SMTP with STARTLS on Port 25
+SMTP with STARTLS on Port 587
+SMTP over TLS Connection on Port 456
+
+IMAP over TLS Connection on Port 993
+POP over TLS Connection on Port 995
+
+######Testing Yahho Mail Services:
+
+test_yahoo_services()
+
+This will test a series of connections on Yahoo services. Yahoo is very similar to Google so we will run the same suite.
 
 # Update the Credential to Valid Credentials
 
@@ -37,6 +48,7 @@ C) Add Argparse for commandline
 ~D) -Script Output -- allows for openssl commands to be dumpted to screen so users can test with openssl~
 E) - Custom Ports -- allow for custom Ports for testing emails
 F) Better Error Handling for selecting the wrong Strategy
+G) JSON Parsing of Mail Server to Test
 
 # Known Issues
 

@@ -16,3 +16,6 @@ IMAP_CAPABILITY = b'CAPABILITY \r\n'
 IMAP_LOGIN = b'LOGIN '
 
 STARTTLS_COMMAND = b'STARTTLS \r\n'
+
+EMAIL_USERNAME = b'changeme@gmail.com'
+EMAIL_PASSWORD = b'changeme'

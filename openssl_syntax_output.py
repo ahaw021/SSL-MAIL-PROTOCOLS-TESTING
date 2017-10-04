@@ -17,9 +17,9 @@ def openssl_standard_ports_terminal(URL="imap.google.com",PROTOCOL="imap"):
 
     elif PROTOCOL == "SMTP":
         print("openssl s_client -connect {}:{} -starttls smtp".format(URL,SMTP_STANDARD))
-        print("openssl s_client -connect {}:{}".format(URL,SMTP_IMPLICIT_SSL))
         print("openssl s_client -connect {}:{} ".format(URL,SMTP_STARTTLS_SSL))
         print("openssl s_client -connect {}:{} -starttls smtp".format(URL,SMTP_STARTTLS_SSL))
+        print("openssl s_client -connect {}:{}".format(URL,SMTP_IMPLICIT_SSL))
 
     else:
         print("Protocol Not Found: Valid Options Are: POP, SMTP or IMAP")

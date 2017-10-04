@@ -1,15 +1,19 @@
-from conversations import *
+from conversations import decide_protocol_handler
 from constants import *
 
 import socket
 import ssl
-import base64
 import time
 
 def insecure_connection(HOST,PORT,PROTOCOL):
     print("Connecting to host: {}  on Port Number {} using Plaintext \r\n".format(HOST,PORT))
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client:
-        client.connect((HOST, PORT))
+        try:
+            client.connect((HOST, PORT))
+        except e:
+            print("Connection Could Not Be Established")
+
+
         data = client.recv(1024)
         #print('Received', repr(data))
 
@@ -30,8 +34,13 @@ def starttls_connection(HOST,PORT,PROTOCOL,TLSSTRENGTH="1.2"):
 
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client:
 
-        client.connect((HOST, PORT))
-        data = client.recv(1024)
+        try:
+            client.connect((HOST, PORT))
+            data = client.recv(1024)
+
+        except e:
+            print("Connection Could Not Be Established")
+
         #print('Received', repr(data))
 
         # SMTP NEEDS A EHLO MESSAGE BEFORE STARTTLS AND OTHER COMMANDS
@@ -91,10 +100,10 @@ def secure_connection(HOST,PORT,PROTOCOL,TLSSTRENGTH="1.2"):
     print_cipher_certificate(secure_client)
     decide_protocol_handler(secure_client,PROTOCOL)
 
-    def print_cipher_certificate(secure_client):
-        cert = secure_client.getpeercert()
-        print("Cipher SUITE SPECIFIED: {} \r\n".format(secure_client))
-        print("Ciphers offered to the Mail Server During Negotiations: {}\r\n".format(secure_client.shared_ciphers()))
-        print("Cipher in use for this TLS Connection: {} \r\n".format(secure_client.cipher()))
-        print("Certificate is Issued By: {} \r\n".format(cert["issuer"]))
-        print("Certificate covers the following Domains: {}\r\n".format(cert["subjectAltName"]))
+def print_cipher_certificate(secure_client):
+    cert = secure_client.getpeercert()
+    print("Cipher SUITE SPECIFIED: {} \r\n".format(secure_client))
+    print("Ciphers offered to the Mail Server During Negotiations: {}\r\n".format(secure_client.shared_ciphers()))
+    print("Cipher in use for this TLS Connection: {} \r\n".format(secure_client.cipher()))
+    print("Certificate is Issued By: {} \r\n".format(cert["issuer"]))
+    print("Certificate covers the following Domains: {}\r\n".format(cert["subjectAltName"]))

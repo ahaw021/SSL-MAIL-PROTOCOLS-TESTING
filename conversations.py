@@ -1,4 +1,5 @@
 from constants import *
+import base64
 
 # Function for choosing conversation path based on Protocol
 
