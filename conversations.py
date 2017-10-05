@@ -26,7 +26,6 @@ def decide_protocol_handler(client, PROTOCOL):
 def pop_conversation(client):
     print("Let's Start a POP Conversation: \r\n")
 
-    time.sleep(1)
     print("Username formatted for POP: {}".format(POP_USER + EMAIL_USERNAME + b' \r\n'))
     client.send(POP_USER + EMAIL_USERNAME + b' \r\n')
     data = client.recv(1024)

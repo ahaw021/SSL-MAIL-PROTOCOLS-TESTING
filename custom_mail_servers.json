@@ -1,0 +1,30 @@
+[
+   {
+      "ID":"1",
+      "DESCRIPTION":"Google IMAP Server",
+      "HOSTNAME":"imap.gmail.com",
+      "SUPPORTED_PROTOCOLS":"IMAP",
+      "PORT":"1001"
+   },
+   {
+      "ID":"2",
+      "DESCRIPTION":"Google POP Server",
+      "HOSTNAME":"pop.gmail.com",
+      "SUPPORTED_PROTOCOLS":"POP",
+      "PORT":"1002"
+   },
+   {
+      "ID":"2",
+      "DESCRIPTION":"Google SMTP Server",
+      "HOSTNAME":"smtp.gmail.com",
+      "SUPPORTED_PROTOCOLS":"SMTP",
+      "PORT":"1003"
+   },
+   {
+      "ID":"2",
+      "DESCRIPTION":"Google SMTP Server",
+      "HOSTNAME":"smtp.gmail.com",
+      "SUPPORTED_PROTOCOLS":"SMTP",
+      "PORT":"1003"
+   }
+]

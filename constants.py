@@ -19,3 +19,8 @@ STARTTLS_COMMAND = b'STARTTLS \r\n'
 
 EMAIL_USERNAME = b'changeme@gmail.com'
 EMAIL_PASSWORD = b'changeme'
+
+SOCKET_TIMEOUT = 5
+OPENSSL_TLS_SUITES = ["tls1","tls1_1","tls1_2"]
+MAIL_PROTOCOLS = ["smtp","pop","imap"]
+COMMON_MAIL_PROVIDERS= ["gmail","yahoo","hotmail","zoho"]
