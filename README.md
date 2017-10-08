@@ -4,33 +4,33 @@ A python Script to test SSL configurations on Mail Servers
 
 Analysis and some of the background can be found in this article. https://community.letsencrypt.org/t/tutorial-testing-mail-protocols-with-ssl-tls/43211/11
 
-mail-test.py -h
+>mail-test.py -h
 
--domains [DOMAINS [DOMAINS ...]]
+>-domains [DOMAINS [DOMAINS ...]]
                       Domains to Scan. Multiple Domains can be provided
 
--tlssuite {tls1,tls1_1,tls1_2}
+>-tlssuite {tls1,tls1_1,tls1_2}
                       TLS Suite as Per OpenSSL Syntax. If not specific TLS
                       1.2 will be used.
 
--protocols [{smtp,pop,imap} [{smtp,pop,imap} ...]]
+>-protocols [{smtp,pop,imap} [{smtp,pop,imap} ...]]
                       Protools to Scan. This can be one or all 3. If not specified SMTP will be tested
 
--ports [PORTS [PORTS ...]]
+>-ports [PORTS [PORTS ...]]
                       Ports to Scan. If not specified standard IANA Ports
                       will be used.
 
--openssl              Print OpenSSL Commands so testing get can get done
+>-openssl              Print OpenSSL Commands so testing get can get done
                       with OpenSSL.
 
--nmap                 Use NMAP to scan Domains for ports only.
+>-nmap                 Use NMAP to scan Domains for ports only.
 
--nmapservices         Use NMAP to scan Domains for ports and service
+>-nmapservices         Use NMAP to scan Domains for ports and service
                       Identification.
 
--test {gmail,yahoo,hotmail,zoho}
+>-test {gmail,yahoo,hotmail,zoho}
                       Test a common provider such as GMAIL or YAHOO
-                      
+
 
 ## EXAMPLES:
 
@@ -86,7 +86,7 @@ EMAIL_PASSWORD = b'changeme'
 
 ~D) -Script Output -- allows for openssl commands to be dumpted to screen so users can test with openssl~
 
-~E) - Custom Ports -- allow for custom Ports for testing emails~
+E) - Custom Ports -- allow for custom Ports for testing emails
 
 ~F) Better Error Handling for selecting the wrong Strategy~
 

@@ -1,5 +1,15 @@
 from constants import *
 
+"""
+Prints out OpenSSL commands for standard IANA ports. Given a host and protocol and TLS Suite the right openssl
+commands are printed out to command line.
+
+params:
+HOST - host to connect to - this should be a string
+PROTOCOl - protocol to test - this should be a string
+TLSSTRENGTH - in OpenSSL syntax
+"""
+
 def openssl_standard_ports_terminal(HOSTS,PROTOCOLS,TLSSTRENGTH="tls1_2"):
     print("\r\nOpenSSL Commands for Testing -- Printed in Terminal \r\n")
     print("NOTE: To Test Insecure Protocols Use a Client like putty or telnet\r\n")

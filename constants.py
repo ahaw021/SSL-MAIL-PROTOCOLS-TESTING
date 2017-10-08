@@ -1,3 +1,7 @@
+"""
+Constants around Mail Protocols, Mail Ports, Mail Commands and Socket Connectivity. 
+"""
+
 POP_STANDARD = 110
 POP_IMPLICIT_SSL = 995
 POP_USER = b'USER '

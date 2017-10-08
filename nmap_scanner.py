@@ -5,6 +5,13 @@ from connections import *
 SCAN_PORTS = "{},{},{},{},{},{},{}".format(SMTP_STANDARD,SMTP_STARTTLS_SSL,SMTP_IMPLICIT_SSL,IMAP_STANDARD,IMAP_IMPLICIT_SSL,POP_STANDARD,POP_IMPLICIT_SSL)
 SCANNER = nmap.PortScanner()
 
+"""
+Nmap scanner for ports only. Iterating this is best done using NMAP library methods
+
+params:
+hostnames - list of hostnames to check
+"""
+
 def scan_mail_server_standard_ports(hostnames):
     for hostname in hostnames:
         print("\r\nScanning Host: {}. Nmap Scanner - ports only \r\n".format(hostname))
@@ -13,6 +20,13 @@ def scan_mail_server_standard_ports(hostnames):
         for ip in SCANNER.all_hosts():
             for port in SCANNER[ip]['tcp'].keys():
                 print("Port {} is {}. Connection Test passed/failed: {} ".format(port,SCANNER[ip]['tcp'][port]['state'],SCANNER[ip]['tcp'][port]['reason']))
+
+"""
+Nmap scanner for ports and services. Iterating this is best done using NMAP library methods 
+
+params:
+hostnames - list of hostnames to check
+"""
 
 def scan_mail_server_standard_ports_services(hostnames):
     for hostname in hostnames:
