@@ -42,7 +42,7 @@ Some common examples are below
 >mail-test.py -test gmail
 
 This will run a series of connections on GMAIL services.
-
+```
 Insecure SMTP on Port 25 (this should not allow for authentication as this requires STARTTLS to be run)
 SMTP with STARTLS on Port 25
 SMTP with STARTLS on Port 587
@@ -50,7 +50,7 @@ SMTP over TLS Connection on Port 456
 
 IMAP over TLS Connection on Port 993
 POP over TLS Connection on Port 995
-
+```
 #### Use Nmap to identify open ports:
 
 >mail-test -domains smtp.gmail.com imap.gmail.com -nmap
