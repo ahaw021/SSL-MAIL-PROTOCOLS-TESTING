@@ -8,21 +8,29 @@ mail-test.py -h
 
 -domains [DOMAINS [DOMAINS ...]]
                       Domains to Scan. Multiple Domains can be provided
+
 -tlssuite {tls1,tls1_1,tls1_2}
                       TLS Suite as Per OpenSSL Syntax. If not specific TLS
                       1.2 will be used.
+
 -protocols [{smtp,pop,imap} [{smtp,pop,imap} ...]]
                       Protools to Scan. This can be one or all 3. If not specified SMTP will be tested
+
 -ports [PORTS [PORTS ...]]
                       Ports to Scan. If not specified standard IANA Ports
                       will be used.
+
 -openssl              Print OpenSSL Commands so testing get can get done
                       with OpenSSL.
+
 -nmap                 Use NMAP to scan Domains for ports only.
+
 -nmapservices         Use NMAP to scan Domains for ports and service
                       Identification.
+
 -test {gmail,yahoo,hotmail,zoho}
                       Test a common provider such as GMAIL or YAHOO
+                      
 
 ## EXAMPLES:
 
