@@ -4,15 +4,33 @@ A python Script to test SSL configurations on Mail Servers
 
 Analysis and some of the background can be found in this article. https://community.letsencrypt.org/t/tutorial-testing-mail-protocols-with-ssl-tls/43211/11
 
-Usage - the script doesn't take parameters but a couple of example are below
+mail-test.py -h
 
-### EXAMPLES:
+-domains [DOMAINS [DOMAINS ...]]
+                      Domains to Scan. Multiple Domains can be provided
+-tlssuite {tls1,tls1_1,tls1_2}
+                      TLS Suite as Per OpenSSL Syntax. If not specific TLS
+                      1.2 will be used.
+-protocols [{smtp,pop,imap} [{smtp,pop,imap} ...]]
+                      Protools to Scan. This can be one or all 3. If not specified SMTP will be tested
+-ports [PORTS [PORTS ...]]
+                      Ports to Scan. If not specified standard IANA Ports
+                      will be used.
+-openssl              Print OpenSSL Commands so testing get can get done
+                      with OpenSSL.
+-nmap                 Use NMAP to scan Domains for ports only.
+-nmapservices         Use NMAP to scan Domains for ports and service
+                      Identification.
+-test {gmail,yahoo,hotmail,zoho}
+                      Test a common provider such as GMAIL or YAHOO
 
-testing_common_providers is a file that contains test examples for common providers and standard protocols.
+## EXAMPLES:
 
-######Testing Google Mail Services:
+Some common examples are below
 
-test_gmail_services()
+####Testing Google Mail Services:
+
+>mail-test.py -test gmail
 
 This will run a series of connections on GMAIL services.
 
@@ -24,15 +42,25 @@ SMTP over TLS Connection on Port 456
 IMAP over TLS Connection on Port 993
 POP over TLS Connection on Port 995
 
-######Testing Yahho Mail Services:
+#### Use Nmap to identify open ports:
 
-test_yahoo_services()
+>mail-test -domains smtp.gmail.com imap.gmail.com -nmap
 
-This will test a series of connections on Yahoo services. Yahoo is very similar to Google so we will run the same suite.
+#### Use Nmap to identify open ports and mail server version:
 
-# Update the Credential to Valid Credentials
+>mail-test -domains smtp.gmail.com imap.gmail.com -nmapservices
 
-Credentials below should be updated. If credentials are not updated and SSL works you will get error for authentication stage.
+#### Create OpenSSL Commands to Test with OpenSSL:
+
+>mail-test -domains smtp.gmail.com imap.gmail.com -protocols imap smtp -openssl
+
+#### Create OpenSSL Commands to Test with OpenSSL for a specific TLS Suite:
+
+>mail-test -domains smtp.gmail.com imap.gmail.com -tlssuite tls1_1 -protocols imap smtp -openssl
+
+## CREDENTIALS:
+
+Credentials in constant.py should be updated. If credentials are not updated and SSL works you will get error for authentication stage.
 
 It's useful for troubleshooting as it show TLS/SSL transport is working. You won't be able to troubleshoot higher level protocol errors.
 
@@ -42,7 +70,7 @@ EMAIL_PASSWORD = b'changeme'
 
 # To Do
 
-A) Test TLS1.2, TLS1.1 and TLS1.0 handshakes automatically for a given server
+~A) Test TLS1.2, TLS1.1 and TLS1.0 handshakes automatically for a given server~
 
 ~B) Test Ports Automatically Given A HOST~
 
@@ -55,6 +83,8 @@ A) Test TLS1.2, TLS1.1 and TLS1.0 handshakes automatically for a given server
 ~F) Better Error Handling for selecting the wrong Strategy~
 
 ~G) JSON Parsing of Mail Server to Test~
+
+H) Generic Testing of Protocol Suites. Update Specific providers to use this as well.
 
 # Known Issues
 

@@ -4,13 +4,13 @@ import base64
 # Function for choosing conversation path based on Protocol
 
 def decide_protocol_handler(client, PROTOCOL):
-    if PROTOCOL=="SMTP":
+    if PROTOCOL=="smtp":
         smtp_conversation(client)
 
-    elif PROTOCOL=="POP":
+    elif PROTOCOL=="pop":
         pop_conversation(client)
 
-    elif PROTOCOL=="IMAP":
+    elif PROTOCOL=="imap":
         imap_conversation(client)
 
     else:
