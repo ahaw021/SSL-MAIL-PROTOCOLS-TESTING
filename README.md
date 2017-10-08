@@ -5,7 +5,7 @@ A python Script to test SSL configurations on Mail Servers
 Analysis and some of the background can be found in this article. https://community.letsencrypt.org/t/tutorial-testing-mail-protocols-with-ssl-tls/43211/11
 
 >mail-test.py -h
-
+```
 >-domains [DOMAINS [DOMAINS ...]]
                       Domains to Scan. Multiple Domains can be provided
 
@@ -31,7 +31,7 @@ Analysis and some of the background can be found in this article. https://commun
 >-test {gmail,yahoo,hotmail,zoho}
                       Test a common provider such as GMAIL or YAHOO
 
-
+```
 ## EXAMPLES:
 
 Some common examples are below
