@@ -1,38 +1,33 @@
-import nmap
-from constants import *
-from connections import *
+import nmap3
+from constants import COMMON_MAIL_PORTS,MAIL_PROTOCOLS
 
-SCAN_PORTS = "{},{},{},{},{},{},{}".format(SMTP_STANDARD,SMTP_STARTTLS_SSL,SMTP_IMPLICIT_SSL,IMAP_STANDARD,IMAP_IMPLICIT_SSL,POP_STANDARD,POP_IMPLICIT_SSL)
-SCANNER = nmap.PortScanner()
+NO_NMAP_INSTALLED = False
 
-"""
-Nmap scanner for ports only. Iterating this is best done using NMAP library methods
-
-params:
-hostnames - list of hostnames to check
-"""
+try:    
+    nmap = nmap3.Nmap()
+except:
+    NO_NMAP_INSTALLED = True
+    print("No Nmap Installed -> Please Install the Nmap engine to Enable this functionality")
 
 def scan_mail_server_standard_ports(hostnames):
-    for hostname in hostnames:
-        print("\r\nScanning Host: {}. Nmap Scanner - ports only \r\n".format(hostname))
-        print("Scanning the following Ports: {} \r\n".format(SCAN_PORTS))
-        SCANNER.scan(hostname,SCAN_PORTS,"-Pn")
-        for ip in SCANNER.all_hosts():
-            for port in SCANNER[ip]['tcp'].keys():
-                print("Port {} is {}. Connection Test passed/failed: {} ".format(port,SCANNER[ip]['tcp'][port]['state'],SCANNER[ip]['tcp'][port]['reason']))
 
-"""
-Nmap scanner for ports and services. Iterating this is best done using NMAP library methods 
+    """
+       Given a List of Hostnames this function will use Nmap to Scan the Server and return the found standard ports  
+    """
 
-params:
-hostnames - list of hostnames to check
-"""
+    if not NO_NMAP_INSTALLED:
+            hostnames_with_ports = []
+            print("Beginning Scans with Nmap")
+            for hostname in hostnames:
+                print(f"\t Scanning Host {hostname}")
+                scan_results = nmap.nmap_version_detection(hostname,arg="-sV -Pn")
+                open_ports_services = []
+                for scan_result in scan_results:
+                    if int(scan_result.get("port")) in COMMON_MAIL_PORTS or scan_result.get("service").get("name") in MAIL_PROTOCOLS:
+                        open_ports_services.append({"port":int(scan_result.get("port")),"protocol":scan_result.get("service").get("name")})
+                hostnames_with_ports.append({"hostname":hostname,"open_mail_ports":open_ports_services})    
+            return hostnames_with_ports    
+    else: 
+        print("NMAP is not Installed")
+        return {}
 
-def scan_mail_server_standard_ports_services(hostnames):
-    for hostname in hostnames:
-        print("Scanning Host: {}. Nmap Scanner with Service Identification \r\n".format(hostname))
-        print("Scanning the following Ports: {} \r\n".format(SCAN_PORTS))
-        SCANNER.scan(hostname,SCAN_PORTS,"-sV -Pn")
-        for ip in SCANNER.all_hosts():
-            for port in SCANNER[ip]['tcp'].keys():
-                print("Port {} is {} and is running the following mail server: {}. Connection Test passed/failed: {}  ".format(port,SCANNER[ip]['tcp'][port]['state'],SCANNER[ip]['tcp'][port]['product'],SCANNER[ip]['tcp'][port]['reason']))

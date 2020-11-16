@@ -4,6 +4,10 @@ A python Script to test SSL configurations on Mail Servers
 
 Analysis and some of the background can be found in this article. https://community.letsencrypt.org/t/tutorial-testing-mail-protocols-with-ssl-tls/43211/11
 
+## The Problems we are trying to solve
+
+Given a email server hostname and not having and understanding of how the TLS/SSL has been configured 
+
 >mail-test.py -h
 
 ```
@@ -25,9 +29,6 @@ Analysis and some of the background can be found in this article. https://commun
                       with OpenSSL.
 
 -nmap                 Use NMAP to scan Domains for ports only.
-
--nmapservices         Use NMAP to scan Domains for ports and service
-                      Identification.
 
 -test {gmail,yahoo,hotmail,zoho}
                       Test a common provider such as GMAIL or YAHOO

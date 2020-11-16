@@ -1,14 +1,15 @@
 from constants import *
 import base64
 
-"""
-Function to decide what conversation based on protocol. As each protocol has a different syntax we need this function to point to the right function.
-params:
-client - a python Socket Client - can be secure on insecure (conversations don't care about transport)
-PROTOCOl - protocol to test - this should be a string
-"""
+
 
 def decide_protocol_handler(client, PROTOCOL):
+    """
+    Function to decide what conversation based on protocol. As each protocol has a different syntax we need this function to point to the right function.
+    params:
+    client - a python Socket Client - can be secure on insecure (conversations don't care about transport)
+    PROTOCOl - protocol to test - this should be a string
+    """
     if PROTOCOL=="smtp":
         smtp_conversation(client)
 
@@ -21,18 +22,19 @@ def decide_protocol_handler(client, PROTOCOL):
     else:
         print("NOT A KNOWN PROTOCOL --- BYEEE")
 
-"""
-Function to test that POP service is responding as expected
-POP COMMAND REFERENCE: https://blog.yimingliu.com/2009/01/23/testing-a-pop3-server-via-telnet-or-openssl/
-Currently working to Authentication only - no email is sent
 
-params:
-
-client - a python Socket Client - can be secure on insecure (conversations don't care about transport)
-
-"""
 
 def pop_conversation(client):
+    """
+    Function to test that POP service is responding as expected
+    POP COMMAND REFERENCE: https://blog.yimingliu.com/2009/01/23/testing-a-pop3-server-via-telnet-or-openssl/
+    Currently working to Authentication only - no email is sent
+
+    params:
+
+    client - a python Socket Client - can be secure on insecure (conversations don't care about transport)
+
+    """
     print("Let's Start a POP Conversation: \r\n")
 
     print("Username formatted for POP: {}".format(POP_USER + EMAIL_USERNAME + b' \r\n'))
@@ -45,19 +47,19 @@ def pop_conversation(client):
     data = client.recv(1024)
     print(data)
 
-"""
-Function to test that SMTP service is responding as expected
-SMTP COMMAND REFERENCE: https://www.ndchost.com/wiki/mail/test-smtp-auth-telnet
-Currently working to Authentication only - no email is sent
 
-params:
-
-client - a python Socket Client - can be secure on insecure (conversations don't care about transport)
-
-"""
 
 def smtp_conversation(client):
+    """
+    Function to test that SMTP service is responding as expected
+    SMTP COMMAND REFERENCE: https://www.ndchost.com/wiki/mail/test-smtp-auth-telnet
+    Currently working to Authentication only - no email is sent
 
+    params:
+
+    client - a python Socket Client - can be secure on insecure (conversations don't care about transport)
+
+    """
     print("Let's Start an SMTP Conversation: \r\n")
     client.send(SMTP_AUTH)
     data = client.recv(1024)
@@ -76,18 +78,19 @@ def smtp_conversation(client):
     data = client.recv(1024)
     print("Server Response: {}".format(data))
 
-"""
-Function to test that IMAP service is responding as expected
-IMAP COMMAND REFERENCE: http://busylog.net/telnet-imap-commands-note/
-Currently working to Authentication only - no email is sent
 
-params:
-
-client - a python Socket Client - can be secure on insecure (conversations don't care about transport)
-
-"""
 
 def imap_conversation(client):
+    """
+    Function to test that IMAP service is responding as expected
+    IMAP COMMAND REFERENCE: http://busylog.net/telnet-imap-commands-note/
+    Currently working to Authentication only - no email is sent
+
+    params:
+
+    client - a python Socket Client - can be secure on insecure (conversations don't care about transport)
+
+    """
     print("Let's Start an IMAP Conversation: \r\n")
 
     print("Authentication String: {}".format(IMAP_RAND_STRING + IMAP_LOGIN + EMAIL_USERNAME +b' ' + EMAIL_PASSWORD + b' \r\n'))

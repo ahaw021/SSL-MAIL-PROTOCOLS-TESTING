@@ -17,7 +17,7 @@ def testing_common_providers(provider):
     if provider == "yahoo":
         starttls_connection("smtp.mail.yahoo.com",SMTP_STARTTLS_SSL,"smtp")
         starttls_connection("smtp.mail.yahoo.com",SMTP_STANDARD,"smtp")
-        secure_connection("smtp.yahoo.com",SMTP_IMPLICIT_SSL,"smtp")
+        secure_connection("smtp.mail.yahoo.com",SMTP_IMPLICIT_SSL,"smtp")
 
         secure_connection("imap.mail.yahoo.com",IMAP_IMPLICIT_SSL,"imap")
         secure_connection("pop.mail.yahoo.com",POP_IMPLICIT_SSL,"pop")
@@ -29,3 +29,7 @@ def testing_common_providers(provider):
         starttls_connection("smtp.zoho.com",SMTP_STARTTLS_SSL,"smtp")
         secure_connection("imap.zoho.com",IMAP_IMPLICIT_SSL,"imap")
         secure_connection("pop.zoho.com",POP_IMPLICIT_SSL,"pop")
+
+#smtp.clicksend.com
+#smtp-relay.sendinblue.com
+#smtp.sendgrid.net

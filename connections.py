@@ -5,15 +5,16 @@ import socket
 import ssl
 import time
 
-"""
-Insecure Connections: This is a standard IPV4 socket
-params:
-HOST - host to connect to - this should be a string
-PORT - port to connect to - this should be an INT
-PROTOCOl - protocol to test - this should be a string
-"""
 
 def insecure_connection(HOST,PORT,PROTOCOL="smtp"):
+    
+    """
+    Insecure Connections: This is a standard IPV4 socket
+    params:
+    HOST - host to connect to - this should be a string
+    PORT - port to connect to - this should be an INT
+    PROTOCOl - protocol to test - this should be a string
+    """
     print("Connecting to host: {}  on Port Number {} using Plaintext \r\n".format(HOST,PORT))
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client:
         client.settimeout(SOCKET_TIMEOUT)
@@ -32,21 +33,22 @@ def insecure_connection(HOST,PORT,PROTOCOL="smtp"):
         except:
             print("Connection Could Not Be Established \r\n")
 
-"""
-STARTTLS Connection: This is a standard IPV4 socket that passes a STARTTLS Commands
-STARTTLS REFERENCE: https://www.fastmail.com/help/technical/ssltlsstarttls.html
-STARTTLS PYTHON WITH SOCKETS CODE: https://stackoverflow.com/questions/12593944/how-to-start-tls-on-an-active-connection-in-python
-THE code above is Python2 ssl so the code below uses SSL contexts compatible with Python3 Sockets and SSL
-NOTE: some protocols such as IMAP and SMTP require extra data to be sent or formatting
 
-params:
-HOST - host to connect to - this should be a string
-PORT - port to connect to - this should be an INT
-PROTOCOl - protocol to test - this should be a string
-TLSSTRENGTH - in OpenSSL syntax
-"""
 
 def starttls_connection(HOST,PORT,PROTOCOL="smtp",TLSSTRENGTH="tls1_2"):
+    """
+    STARTTLS Connection: This is a standard IPV4 socket that passes a STARTTLS Commands
+    STARTTLS REFERENCE: https://www.fastmail.com/help/technical/ssltlsstarttls.html
+    STARTTLS PYTHON WITH SOCKETS CODE: https://stackoverflow.com/questions/12593944/how-to-start-tls-on-an-active-connection-in-python
+    THE code above is Python2 ssl so the code below uses SSL contexts compatible with Python3 Sockets and SSL
+    NOTE: some protocols such as IMAP and SMTP require extra data to be sent or formatting
+
+    params:
+    HOST - host to connect to - this should be a string
+    PORT - port to connect to - this should be an INT
+    PROTOCOl - protocol to test - this should be a string
+    TLSSTRENGTH - in OpenSSL syntax
+    """
     print("Connecting to host: {}  on Port Number {} using STARTTLS \r\n".format(HOST,PORT))
 
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client:
@@ -56,7 +58,7 @@ def starttls_connection(HOST,PORT,PROTOCOL="smtp",TLSSTRENGTH="tls1_2"):
         try:
             client.connect((HOST, PORT))
             data = client.recv(1024)
-            #print(data)
+
             # SMTP NEEDS A EHLO MESSAGE BEFORE STARTTLS AND OTHER COMMANDS
             # IMAP NEEDS A RANDOM STRING FOR THE STARTTLS COMMAND
             # POP3 - investigate but for now assume it's just a straight forward stattls
@@ -98,19 +100,19 @@ def starttls_connection(HOST,PORT,PROTOCOL="smtp",TLSSTRENGTH="tls1_2"):
             print("Connection Could Not Be Established \r\n")
             print(e)
 
-"""
-Secure Connection as per python 3 SSL documentation
-https://docs.python.org/3/library/ssl.html
-We call a method to create the context as we may use different TLS methods
-
-params:
-HOST - host to connect to - this should be a string
-PORT - port to connect to - this should be an INT
-PROTOCOl - protocol to test - this should be a string
-TLSSTRENGTH - in OpenSSL syntax
-"""
-
 def secure_connection(HOST,PORT,PROTOCOL="smtp",TLSSTRENGTH="tls1_2"):
+    """
+    Secure Connection as per python 3 SSL documentation
+    https://docs.python.org/3/library/ssl.html
+    We call a method to create the context as we may use different TLS methods
+
+    params:
+    HOST - host to connect to - this should be a string
+    PORT - port to connect to - this should be an INT
+    PROTOCOl - protocol to test - this should be a string
+    TLSSTRENGTH - in OpenSSL syntax
+    """
+
     print("Connecting to host: {}  on Port Number {} using an IMPLICITY SECURE Connection \r\n".format(HOST,PORT))
 
     context = create_tls_context(TLSSTRENGTH)
@@ -134,38 +136,43 @@ def secure_connection(HOST,PORT,PROTOCOL="smtp",TLSSTRENGTH="tls1_2"):
         print(e)
 
 
-"""
-Method to print certificate and cipher information.
-Pass a Secure Socket Context. Saves having to call this in the various connections methods
 
-Params:
-
-secure_client - a secure socket context
-"""
 
 def print_cipher_certificate(secure_client):
+    """
+    Method to print certificate and cipher information.
+    Pass a Secure Socket Context. Saves having to call this in the various connections methods
+
+    Params:
+
+    secure_client - a secure socket context
+    """
     cert = secure_client.getpeercert()
     #print("Ciphers offered to the Mail Server During Negotiations: {}\r\n".format(secure_client.shared_ciphers()))
     print("Cipher in use for this TLS Connection: {} \r\n".format(secure_client.cipher()))
     print("Certificate is Issued By: {} \r\n".format(cert["issuer"]))
     print("Certificate covers the following Domains: {}\r\n".format(cert["subjectAltName"]))
 
-"""
-Method to create a TLS context. Gives us flexibility in how we create TLS Sockets.
 
-Params:
-
-TLSSTRENGTH - in OpenSSL syntax
-
-Returns:
-
-ssl.SSLContext object
-"""
 
 def create_tls_context(TLSSTRENGTH):
+    """
+    Method to create a TLS context. Gives us flexibility in how we create TLS Sockets.
+
+    Params:
+
+    TLSSTRENGTH - in OpenSSL syntax
+
+    Returns:
+
+    ssl.SSLContext object
+    """
 
     #CREATE a CONTEXT that we can then update
     context = ssl.SSLContext(protocol=ssl.PROTOCOL_TLS)
+
+    if TLSSTRENGTH == "tls1_3":
+        context = ssl.SSLContext(protocol=ssl.PROTOCOL_TLSv1_3)
 
     if TLSSTRENGTH == "tls1_2":
         context = ssl.SSLContext(protocol=ssl.PROTOCOL_TLSv1_2)
